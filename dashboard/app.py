@@ -34,7 +34,7 @@ with col2:
     st.number_input("Short-Term SMA", 5, 50, 30, key="short_term_sma")
 
 with col3:
-    st.number_input("Long-Term SMA", 51, 200, 80, key="long_term_sma")
+    st.number_input("Long-Term SMA", 51, 140, 80, key="long_term_sma")
 
 tickers = {
     "Saudi Arabian Oil Company": "2222.SR",
@@ -204,6 +204,51 @@ chart = (
         titleColor='white',
         symbolType='stroke'
     )
+    .properties(
+        title="Stock Price + Short-Term & Long-Term SMA"
+    )
 )
 
 st.altair_chart(chart, use_container_width=True)
+
+current_cash = STARTING_CASH
+current_shares = 0
+
+current_stock_date_adjusted = current_stock[
+    (current_stock["Date"] >= START_DATE) & (current_stock["Date"] <= END_DATE)
+]
+
+short_term_sma = current_stock["Open"].rolling(st.session_state.short_term_sma).mean()[
+    (current_stock["Date"] >= START_DATE) & (current_stock["Date"] <= END_DATE)
+]
+long_term_sma = current_stock["Open"].rolling(st.session_state.long_term_sma).mean()[
+    (current_stock["Date"] >= START_DATE) & (current_stock["Date"] <= END_DATE)
+]
+
+if short_term_sma.iloc[0] > long_term_sma.iloc[0]:
+    current_shares = current_cash / current_stock_date_adjusted["Open"].iloc[0]
+    current_cash = 0
+
+for i in range(1, len(short_term_sma)):
+    if short_term_sma.iloc[i] > long_term_sma.iloc[i] and short_term_sma.iloc[i - 1] < long_term_sma.iloc[i - 1] and current_cash != 0:
+        current_shares = current_cash / current_stock_date_adjusted["Open"].iloc[i]
+        current_cash = 0
+    elif short_term_sma.iloc[i] < long_term_sma.iloc[i] and short_term_sma.iloc[i - 1] > long_term_sma.iloc[i - 1] and current_cash == 0:
+        current_cash = current_shares * current_stock_date_adjusted["Open"].iloc[i]
+        current_shares = 0
+
+final_yield = max(current_cash, current_shares * current_stock_date_adjusted["Open"].iloc[-1]) / 100
+
+info_col1, info_col2, info_col3 = st.columns(3)
+
+with info_col1:
+    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Selected SMA Parameter Pair Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{final_yield:.2f}%</h2>", unsafe_allow_html=True)
+
+with info_col2:
+    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Buy-and-Hold Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{(compound_annual_growth_multiplier_with_dividends - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
+
+with info_col3:
+    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Validated SMA Crossover Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{(np.prod(final_yields) ** (1/4) - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
