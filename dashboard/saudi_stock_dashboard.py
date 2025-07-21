@@ -197,7 +197,7 @@ chart = (
             "Type:N",
             legend=alt.Legend(
                 title="Labels",
-                orient="top-left",
+                orient="top-right",
                 labelOpacity=0.6,
                 fillColor="rgba(0,0,0,0.2)"
             ),
