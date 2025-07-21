@@ -4,10 +4,10 @@ import numpy as np
 import altair as alt
 
 st.title("Saudi Stock Dashboard")
-st.write("One of the biggest challenges novice investors face is not knowing whether their strategy is working. This application helps address this issue by comparing two of the most common strategies:")
+st.write("One of the biggest challenges novice investors face is not knowing whether their strategy is working. This application helps address this issue by comparing two of the most common strategies for some of the biggest Saudi stocks:")
 
 st.markdown("""
-* Buy and Hold - with dividend yields included
+* Buy-and-Hold - with dividend yields included
 * Simple Moving Average (SMA) Crossover Strategy - use the moving averages to buy or sell
 """)
 
@@ -242,13 +242,17 @@ final_yield = max(current_cash, current_shares * current_stock_date_adjusted["Op
 info_col1, info_col2, info_col3 = st.columns(3)
 
 with info_col1:
-    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Selected SMA Parameter Pair Annualized Return</p>**", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{final_yield:.2f}%</h2>", unsafe_allow_html=True)
+    st.markdown("**<p style='padding-top: 0; text-align: center; color: #ddd;'>Selected SMA Parameter Pair Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding-top: 0; margin-left: 1rem; text-align: center;'>{final_yield:.2f}%</h2>", unsafe_allow_html=True)
 
 with info_col2:
-    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Buy-and-Hold Annualized Return</p>**", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{(compound_annual_growth_multiplier_with_dividends - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
+    st.markdown("**<p style='padding-top: 0; text-align: center; color: #ddd;'>Buy-and-Hold Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding-top: 0; margin-left: 1rem; text-align: center;'>{(compound_annual_growth_multiplier_with_dividends - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
 
 with info_col3:
-    st.markdown("**<p style='padding: 0; text-align: center; color: #ddd;'>Validated SMA Crossover Annualized Return</p>**", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='padding: 0; margin-left: 1rem; text-align: center;'>{(np.prod(final_yields) ** (1/4) - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
+    st.markdown("**<p style='padding-top: 0; text-align: center; color: #ddd;'>Validated SMA Crossover Annualized Return</p>**", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='padding-top: 0; margin-left: 1rem; text-align: center;'>{(np.prod(final_yields) ** (1/4) - 1) * 100:.2f}%</h2>", unsafe_allow_html=True)
+
+st.markdown("<h3 style='padding-top: 2rem; text-align: center;'>Additional Information</h3>", unsafe_allow_html=True)
+
+st.write("The Buy-and-Hold strategy dominates in the Saudi Arabian stock market due to the substantial dividend yields and the low trend-persistence resulting in many false signals from the SMA crossover strategy. For more information about how the validated SMA annualized return is calculated, have a quick glance at this [notebook](https://github.com/mohammedalwosaibi/saudi-stock-dashboard/blob/main/notebooks/aramco_strategy_analysis.ipynb).")
