@@ -36,30 +36,26 @@ with col2:
 with col3:
     st.number_input("Long-Term SMA", 51, 140, 80, key="long_term_sma")
 
-tickers = {
-    "Saudi Arabian Oil Company": "2222.SR",
-    "Al Rajhi Banking and Investment Corporation": "1120.SR",
-    "The Saudi National Bank": "1180.SR",
-    "Saudi Telecom Company": "7010.SR",
-    "Saudi Arabian Mining Company": "1211.SR",
-    "Alinma Bank": "1150.SR",
-    "Saudi Basic Industries Corporation": "2010.SR",
-    "Dr. Sulaiman Al Habib Medical Services Group Company": "4013.SR",
-    "Riyad Bank": "1010.SR",
-    "Saudi Awwal Bank": "1060.SR",
-    "Abdullah Al-Othaim Markets Company": "4001.SR",
+companies = {
+    "Saudi Arabian Oil Company": {"ticker": "2222.SR", "dividend_yield": 5.39},
+    "Al Rajhi Banking and Investment Corporation": {"ticker": "1120.SR", "dividend_yield": 2.86},
+    "The Saudi National Bank": {"ticker": "1180.SR", "dividend_yield": 5.54},
+    "Saudi Telecom Company": {"ticker": "7010.SR", "dividend_yield": 5.17},
+    "Saudi Arabian Mining Company": {"ticker": "1211.SR", "dividend_yield": 0.00},
+    "Alinma Bank": {"ticker": "1150.SR", "dividend_yield": 5.22},
+    "Saudi Basic Industries Corporation": {"ticker": "2010.SR", "dividend_yield": 6.22},
+    "Dr. Sulaiman Al Habib Medical Services Group Company": {"ticker": "4013.SR", "dividend_yield": 1.65},
+    "Riyad Bank": {"ticker": "1010.SR", "dividend_yield": 6.26},
+    "Saudi Awwal Bank": {"ticker": "1060.SR", "dividend_yield": 5.93},
+    "Abdullah Al-Othaim Markets Company": {"ticker": "4001.SR", "dividend_yield": 4.76},
 }
 
-current_ticker = tickers[company_name]
+current_ticker = companies[company_name]["ticker"]
 
 current_stock = yf.download(current_ticker, "2019-12-01", "2025-07-13", multi_level_index=False, auto_adjust=False)
 current_stock.reset_index(inplace=True)
 
-
-dividend_yield = yf.Ticker(current_ticker).info.get("dividendYield")
-
-if dividend_yield is None:
-    dividend_yield = 0.00
+dividend_yield = companies[company_name]["dividend_yield"]
 
 STARTING_CASH = 100
 DIVIDEND_MULTIPLIER = dividend_yield / 100 + 1
