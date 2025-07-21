@@ -195,7 +195,12 @@ chart = (
         y=alt.Y("Price:Q", scale=alt.Scale(domain=[y_min, y_max])),
         color=alt.Color(
             "Type:N",
-            legend=alt.Legend(title="Series"),
+            legend=alt.Legend(
+                title="Labels",
+                orient="top-left",
+                labelOpacity=0.6,
+                fillColor="rgba(0,0,0,0.2)"
+            ),
             scale=alt.Scale(range=["#FFD700", "#0044AA", "#DD7722"])
         )
     )
